@@ -1,15 +1,20 @@
 import "./styles/moment.scss";
 
-const timeAgo = (date: string | number | Date) => {
+const timeAgo = (date: any) => {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+
   const now = new Date();
-  const diff = now.getTime() - new Date(date).getTime();
+  const diff = now.getTime() - d.getTime();
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
+  if (seconds < 0) return "刚刚";
   if (seconds < 60) {
-    return `${seconds} 秒前`;
+    return "几秒前";
   } else if (minutes < 60) {
     return `${minutes} 分钟前`;
   } else if (hours < 24) {
@@ -17,11 +22,21 @@ const timeAgo = (date: string | number | Date) => {
   } else if (days === 1) {
     return "昨天";
   } else {
-    const d = new Date(date);
     return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
   }
 };
 
-document.addEventListener("alpine:init", () => {
-  window.Alpine.magic("timeAgo", () => (date: string | number | Date) => timeAgo(date));
-});
+const registerMagic = () => {
+  if (window.Alpine) {
+    window.Alpine.magic("timeAgo", () => (date: any) => timeAgo(date));
+  }
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", registerMagic);
+} else {
+  registerMagic();
+}
+
+// Also listen for alpine:init just in case it hasn't fired yet
+document.addEventListener("alpine:init", registerMagic);

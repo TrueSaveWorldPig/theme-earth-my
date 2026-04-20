@@ -1,7 +1,7 @@
 <include src="layout.html">
   <template name="head">
     <title th:text="|${title ?: #messages.msg('page.moments.title')} - ${site.title}|"></title>
-    <script type="module" src="./assets/moment.ts"></script>
+    <script type="module" src="@/assets/moment.ts"></script>
   </template>
   <template name="hero">
     <th:block th:replace="~{modules/hero :: hero(isHome = true, cover = null, title = null)}" />
@@ -40,11 +40,12 @@
             x-data="upvote('moment','moment.halo.run','moments')"
           >
             <li
-              th:each="moment : ${moments.items}"
-              th:attr="x-data=|{name:'${moment.metadata.name}',showComment:false, releaseTime: '${moment.spec.releaseTime}'}|"
-              th:with="content=${moment.spec.content}"
-              class="animated fadeIn moment-item flex w-full items-start gap-4"
-            >
+                th:id="${moment.metadata.name}"
+                th:each="moment : ${moments.items}"
+                th:attr="x-data=|{name: '${moment.metadata.name}', showComment: false, releaseTime: '${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd''T''HH:mm:ss')}'}|"
+                th:with="content=${moment.spec.content}"
+                class="animated fadeIn moment-item flex w-full items-start gap-4"
+              >
               <div class="moment-avatar-container shrink-0">
                 <img
                   th:src="${moment.owner.avatar ?: #theme.assets('/images/default-avatar.svg')}"
@@ -58,7 +59,10 @@
                   <span class="text-sm font-semibold text-gray-900 dark:text-slate-100" th:text="${moment.owner.displayName}"></span>
                   <div class="flex items-center text-xs text-gray-400 dark:text-slate-500">
                     <i class="i-tabler-clock-hour-4 mr-1 size-3.5"></i>
-                    <span x-text="$timeAgo(releaseTime)" th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"></span>
+                    <span
+                      x-text="$timeAgo(releaseTime)"
+                      th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
+                    ></span>
                   </div>
                 </div>
                 <div
