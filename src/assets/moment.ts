@@ -1,6 +1,6 @@
 import "./styles/moment.scss";
 
-const timeAgo = (date: any) => {
+export const timeAgo = (date: any) => {
   if (!date) return "";
   const d = new Date(date);
   if (isNaN(d.getTime())) return "";
@@ -25,18 +25,3 @@ const timeAgo = (date: any) => {
     return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
   }
 };
-
-const registerMagic = () => {
-  if (window.Alpine) {
-    window.Alpine.magic("timeAgo", () => (date: any) => timeAgo(date));
-  }
-};
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", registerMagic);
-} else {
-  registerMagic();
-}
-
-// Also listen for alpine:init just in case it hasn't fired yet
-document.addEventListener("alpine:init", registerMagic);

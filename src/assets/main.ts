@@ -1,6 +1,7 @@
 import "./styles/tailwind.css";
 import "./styles/main.scss";
-import Alpine from "alpinejs";
+// 声明全局变量 Alpine 的类型，避免 TS 报错
+declare const Alpine: any;
 
 import colorSchemeSwitcher from "./alpine-data/color-scheme-switcher";
 import dropdown from "./alpine-data/dropdown";
@@ -9,6 +10,7 @@ import uiPermission from "./alpine-data/ui-permission";
 import upvote from "./alpine-data/upvote";
 import "./components/number-formatter";
 import "./utils/overlayscrollbars";
+import { timeAgo } from "./moment";
 
 window.Alpine = Alpine;
 
@@ -17,6 +19,8 @@ Alpine.data("colorSchemeSwitcher", colorSchemeSwitcher);
 Alpine.data("upvote", upvote);
 Alpine.data("share", share);
 Alpine.data("uiPermission", uiPermission);
+
+Alpine.magic("timeAgo", () => (date: any) => timeAgo(date));
 
 Alpine.start();
 
