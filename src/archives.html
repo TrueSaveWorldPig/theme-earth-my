@@ -1,6 +1,10 @@
 <include src="layout.html">
   <template name="head">
     <title th:text="|#{page.archives.title} - ${site.title}|"></title>
+    <script th:inline="javascript">
+      window.archiveData = /*[[${archives.items}]]*/ [];
+    </script>
+    <script type="module" src="./assets/archives.ts"></script>
   </template>
 
   <template name="hero">
@@ -118,9 +122,4 @@
     <th:block th:replace="~{modules/sidebar :: sidebar(prepend = null)}" />
   </section>
 
-  <!-- 传递数据到 JS -->
-  <script th:inline="javascript">
-    window.archiveData = /*[[${archives.items}]]*/ [];
-  </script>
-  <script type="module" src="/src/assets/archives.ts"></script>
 </include>
