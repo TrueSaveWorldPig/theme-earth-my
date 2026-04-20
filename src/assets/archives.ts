@@ -1,6 +1,7 @@
 interface Post {
   spec: {
     publishTime: string;
+    title: string;
   };
 }
 
@@ -19,19 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!archiveData.length) return;
 
   const allPosts: Post[] = [];
+  const dateToPosts: Record<string, Post[]> = {};
+
   archiveData.forEach((year: ArchiveYear) => {
     year.months.forEach((month: ArchiveMonth) => {
-      allPosts.push(...month.posts);
+      month.posts.forEach((post: Post) => {
+        allPosts.push(post);
+        const date = new Date(post.spec.publishTime);
+        const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        if (!dateToPosts[dateStr]) dateToPosts[dateStr] = [];
+        dateToPosts[dateStr].push(post);
+      });
     });
   });
 
-  const postDates = allPosts.map((post) => {
-    const date = new Date(post.spec.publishTime);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(
-      2,
-      "0"
-    )}`;
-  });
+  const postDates = Object.keys(dateToPosts);
 
   // 1. 计算统计数据
   const uniqueDates = new Set(postDates);
@@ -45,32 +48,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let streak = 0;
   if (sortedDates.length > 0) {
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(
-      today.getDate()
-    ).padStart(2, "0")}`;
+    const todayStr = formatDate(today);
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
-    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(
-      yesterday.getDate()
-    ).padStart(2, "0")}`;
+    const yesterdayStr = formatDate(yesterday);
 
-    // 如果今天没发，但昨天发了，也算连续（或者只看历史最长，或者看当前连续）
-    // 这里看当前连续
-    let checkDate = new Date(sortedDates[0]);
     const firstDateStr = sortedDates[0];
-    
-    // 如果最近一次发布不是今天或昨天，连续天数为0
     if (firstDateStr === todayStr || firstDateStr === yesterdayStr) {
       streak = 1;
       for (let i = 1; i < sortedDates.length; i++) {
         const d1 = new Date(sortedDates[i - 1]);
         const d2 = new Date(sortedDates[i]);
         const diff = (d1.getTime() - d2.getTime()) / (1000 * 60 * 60 * 24);
-        if (diff === 1) {
-          streak++;
-        } else {
-          break;
-        }
+        if (diff === 1) streak++;
+        else break;
       }
     }
   }
@@ -79,98 +70,133 @@ document.addEventListener("DOMContentLoaded", () => {
     streakDaysElement.innerText = streak.toString();
   }
 
-  // 2. 渲染热力图 (展示最近一年)
-  renderHeatmap(postDates);
+  // 2. 渲染热力图 (按月)
+  let currentDisplayDate = new Date();
+  // 确保初始显示的月份有数据，如果没有数据则跳转到最近的有文章的月份
+  if (sortedDates.length > 0) {
+    const latestPostDate = new Date(sortedDates[0]);
+    currentDisplayDate = new Date(latestPostDate.getFullYear(), latestPostDate.getMonth(), 1);
+  }
+
+  const render = () => {
+    renderMonthHeatmap(currentDisplayDate, dateToPosts);
+    updateHeatmapTitle(currentDisplayDate);
+  };
+
+  document.getElementById("prev-month")?.addEventListener("click", () => {
+    currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1);
+    render();
+  });
+
+  document.getElementById("next-month")?.addEventListener("click", () => {
+    currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1);
+    render();
+  });
+
+  render();
 });
 
-function renderHeatmap(postDates: string[]) {
+function formatDate(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function updateHeatmapTitle(date: Date) {
+  const titleEl = document.getElementById("heatmap-title");
+  if (titleEl) {
+    const monthName = date.toLocaleString("default", { month: "long", year: "numeric" });
+    titleEl.innerText = `${monthName} 发布强度`;
+  }
+}
+
+function renderMonthHeatmap(displayDate: Date, dateToPosts: Record<string, Post[]>) {
   const container = document.getElementById("archive-heatmap");
   if (!container) return;
 
-  const dateCounts: Record<string, number> = {};
-  postDates.forEach((date) => {
-    dateCounts[date] = (dateCounts[date] || 0) + 1;
-  });
-
-  const today = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(today.getFullYear() - 1);
-  // 调整到最近的一个周日开始
-  oneYearAgo.setDate(oneYearAgo.getDate() - oneYearAgo.getDay());
-
-  const weeks: HTMLDivElement[] = [];
-  let currentWeek = document.createElement("div");
-  currentWeek.className = "flex flex-col gap-1";
-
-  const tempDate = new Date(oneYearAgo);
-  const months: { name: string; index: number }[] = [];
-  let lastMonth = -1;
-  let dayCount = 0;
-
-  while (tempDate <= today) {
-    const dateStr = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, "0")}-${String(
-      tempDate.getDate()
-    ).padStart(2, "0")}`;
-    const count = dateCounts[dateStr] || 0;
-
-    if (tempDate.getMonth() !== lastMonth) {
-      months.push({
-        name: tempDate.toLocaleString("default", { month: "short" }),
-        index: Math.floor(dayCount / 7),
-      });
-      lastMonth = tempDate.getMonth();
-    }
-
-    const dayEl = document.createElement("div");
-    dayEl.className = `size-3 rounded-sm transition-colors duration-300 relative group`;
-    
-    // 颜色等级
-    if (count === 0) dayEl.classList.add("bg-slate-200", "dark:bg-slate-800");
-    else if (count === 1) dayEl.classList.add("bg-emerald-200", "dark:bg-emerald-900/50");
-    else if (count <= 3) dayEl.classList.add("bg-emerald-400", "dark:bg-emerald-700/50");
-    else dayEl.classList.add("bg-emerald-600", "dark:bg-emerald-500/50");
-
-    // Tooltip
-    dayEl.setAttribute("title", `${dateStr}: ${count} posts`);
-
-    currentWeek.appendChild(dayEl);
-
-    if (tempDate.getDay() === 6) {
-      weeks.push(currentWeek);
-      currentWeek = document.createElement("div");
-      currentWeek.className = "flex flex-col gap-1";
-    }
-
-    tempDate.setDate(tempDate.getDate() + 1);
-    dayCount++;
-  }
-  if (currentWeek.children.length > 0) {
-    weeks.push(currentWeek);
-  }
-
-  // 渲染
   container.innerHTML = "";
   
-  // 月份标签
-  const monthLabels = document.createElement("div");
-  monthLabels.className = "flex mb-2 text-[10px] text-slate-400 h-4 relative";
-  container.appendChild(monthLabels);
+  const year = displayDate.getFullYear();
+  const month = displayDate.getMonth();
+  
+  // 获取该月第一天和最后一天
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  
+  // 获取日历网格数据 (包含前后补齐)
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - startDate.getDay()); // 补齐到周日
+  
+  const endDate = new Date(lastDay);
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); // 补齐到周六
 
   const gridContainer = document.createElement("div");
-  gridContainer.className = "flex gap-1";
-  container.appendChild(gridContainer);
-
-  weeks.forEach((week, i) => {
-    gridContainer.appendChild(week);
-    
-    // 添加月份标注
-    const month = months.find(m => m.index === i);
-    if (month) {
-      const label = document.createElement("span");
-      label.innerText = month.name;
-      label.className = "absolute";
-      label.style.left = `${i * 16}px`; // 12px size + 4px gap
-      monthLabels.appendChild(label);
-    }
+  gridContainer.className = "grid grid-cols-7 gap-2 p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700";
+  
+  // 星期标签
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  weekDays.forEach(day => {
+    const dayLabel = document.createElement("div");
+    dayLabel.className = "text-[10px] text-slate-400 font-medium text-center uppercase tracking-wider mb-1";
+    dayLabel.innerText = day;
+    gridContainer.appendChild(dayLabel);
   });
+
+  const tempDate = new Date(startDate);
+  while (tempDate <= endDate) {
+    const dateStr = formatDate(tempDate);
+    const posts = dateToPosts[dateStr] || [];
+    const count = posts.length;
+    const isCurrentMonth = tempDate.getMonth() === month;
+
+    const dayEl = document.createElement("div");
+    dayEl.className = "group relative flex items-center justify-center";
+    
+    const box = document.createElement("div");
+    box.className = `size-8 sm:size-10 rounded-lg transition-all duration-300 flex items-center justify-center text-xs font-medium cursor-default`;
+    
+    if (!isCurrentMonth) {
+      box.className += " opacity-20 pointer-events-none";
+    }
+
+    if (count === 0) {
+      box.className += " bg-slate-100 dark:bg-slate-900/50 text-slate-400";
+    } else {
+      box.className += " text-white shadow-sm scale-105 z-10";
+      if (count === 1) box.className += " bg-emerald-400 dark:bg-emerald-600";
+      else if (count <= 3) box.className += " bg-emerald-500 dark:bg-emerald-500";
+      else box.className += " bg-emerald-600 dark:bg-emerald-400 shadow-emerald-200 dark:shadow-emerald-900";
+      box.innerText = count.toString();
+    }
+
+    // Tooltip
+    if (count > 0 && isCurrentMonth) {
+      const tooltip = document.createElement("div");
+      tooltip.className = "absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-3 bg-slate-900 text-white text-xs rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl pointer-events-none";
+      
+      const tooltipArrow = document.createElement("div");
+      tooltipArrow.className = "absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900";
+      tooltip.appendChild(tooltipArrow);
+
+      const tooltipTitle = document.createElement("div");
+      tooltipTitle.className = "font-bold mb-1 border-b border-slate-700 pb-1";
+      tooltipTitle.innerText = dateStr;
+      tooltip.appendChild(tooltipTitle);
+
+      const list = document.createElement("ul");
+      list.className = "space-y-1 mt-1";
+      posts.forEach(p => {
+        const item = document.createElement("li");
+        item.className = "line-clamp-2 leading-tight opacity-90";
+        item.innerText = `• ${p.spec.title}`;
+        list.appendChild(item);
+      });
+      tooltip.appendChild(list);
+      dayEl.appendChild(tooltip);
+    }
+
+    dayEl.appendChild(box);
+    gridContainer.appendChild(dayEl);
+    tempDate.setDate(tempDate.getDate() + 1);
+  }
+  
+  container.appendChild(gridContainer);
 }
