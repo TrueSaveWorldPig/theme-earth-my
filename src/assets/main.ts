@@ -1,7 +1,7 @@
 import "./styles/tailwind.css";
 import "./styles/main.scss";
-// 声明全局变量 Alpine 的类型，避免 TS 报错
-declare const Alpine: any;
+// @ts-ignore
+import Alpine from "alpinejs";
 
 import colorSchemeSwitcher from "./alpine-data/color-scheme-switcher";
 import dropdown from "./alpine-data/dropdown";
