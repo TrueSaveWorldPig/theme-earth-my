@@ -7,67 +7,98 @@
     <th:block th:replace="~{modules/hero :: hero(isHome = true, cover = null, title = null)}" />
   </template>
 
-  <section class="mx-auto mt-6 grid max-w-7xl grid-cols-1 gap-6 px-4 md:grid-cols-[1fr_18rem] lg:px-6">
+  <section class="mx-auto mt-6 grid max-w-7xl grid-cols-1 gap-6 px-4 md:grid-cols-[1fr_18rem] lg:px-6" th:with="stats = ${siteStatsFinder.getStats()}">
     <div class="z-0 min-w-0">
-      <div class="rounded-xl bg-white p-4 dark:bg-slate-800">
-        <h1 class="mb-6 text-2xl font-medium dark:text-slate-50" th:text="#{page.archives.title}"></h1>
-        <div class="flex flex-col gap-4">
-          <th:block th:each="archive : ${archives.items}">
-            <th:block th:each="month : ${archive.months}">
-              <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-12 sm:col-span-3">
-                  <h2
-                    class="sticky top-20 mt-2 text-lg font-medium dark:text-slate-50"
-                    th:text="#{page.archives.date(${archive.year},${month.month})}"
-                  ></h2>
-                </div>
-                <div class="col-span-12 sm:col-span-9">
+      <div class="rounded-xl bg-white p-6 shadow-sm dark:bg-slate-800">
+        <h1 class="mb-8 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50" th:text="#{page.archives.title}"></h1>
+
+        <!-- 统计卡片 -->
+        <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-white shadow-lg transition-transform hover:scale-[1.02]">
+            <div class="relative z-10">
+              <p class="text-sm font-medium opacity-80" th:text="#{widget.profile.postCount.label}"></p>
+              <h3 class="mt-2 text-4xl font-bold tabular-nums">
+                <number-formatter th:attr="value=${stats.post}" />
+              </h3>
+            </div>
+            <div class="absolute -bottom-2 -right-2 opacity-10">
+              <span class="i-tabler-article text-8xl"></span>
+            </div>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white shadow-lg transition-transform hover:scale-[1.02]">
+            <div class="relative z-10">
+              <p class="text-sm font-medium opacity-80">累计发布天数</p>
+              <h3 class="mt-2 text-4xl font-bold tabular-nums" id="publish-days-count">0</h3>
+            </div>
+            <div class="absolute -bottom-2 -right-2 opacity-10">
+              <span class="i-tabler-calendar-event text-8xl"></span>
+            </div>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 p-6 text-white shadow-lg transition-transform hover:scale-[1.02]">
+            <div class="relative z-10">
+              <p class="text-sm font-medium opacity-80">连续创作</p>
+              <h3 class="mt-2 text-4xl font-bold tabular-nums" id="streak-days-count">0</h3>
+            </div>
+            <div class="absolute -bottom-2 -right-2 opacity-10">
+              <span class="i-tabler-flame text-8xl"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 日历热力图 -->
+        <div class="mb-10 rounded-2xl border border-slate-100 bg-slate-50/50 p-6 dark:border-slate-700 dark:bg-slate-900/50">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">年度发布强度</h2>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span>Less</span>
+              <div class="flex gap-1">
+                <div class="size-3 rounded-sm bg-slate-200 dark:bg-slate-800"></div>
+                <div class="size-3 rounded-sm bg-emerald-200 dark:bg-emerald-900/50"></div>
+                <div class="size-3 rounded-sm bg-emerald-400 dark:bg-emerald-700/50"></div>
+                <div class="size-3 rounded-sm bg-emerald-600 dark:bg-emerald-500/50"></div>
+              </div>
+              <span>More</span>
+            </div>
+          </div>
+          <div class="overflow-x-auto pb-2">
+            <div id="archive-heatmap" class="min-w-[700px]">
+              <!-- 热力图由 JS 动态渲染 -->
+              <div class="flex animate-pulse flex-col gap-2">
+                <div class="h-32 w-full rounded bg-slate-200 dark:bg-slate-800"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 时间轴 -->
+        <div class="relative pl-8 before:absolute before:left-[11px] before:top-2 before:h-[calc(100%-24px)] before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700">
+          <th:block th:each="archive, archiveStat : ${archives.items}">
+            <th:block th:each="month, monthStat : ${archive.months}">
+              <div class="mb-10 last:mb-0">
+                <div 
+                  class="absolute left-0 top-1 z-10 flex size-6 items-center justify-center rounded-full border-4 border-white bg-blue-500 dark:border-slate-800"
+                  th:classappend="${archiveStat.first and monthStat.first} ? 'timeline-dot-active' : ''"
+                ></div>
+                <h2 class="mb-6 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50" th:text="#{page.archives.date(${archive.year},${month.month})}"></h2>
+                
+                <div class="grid grid-cols-1 gap-6">
                   <th:block th:each="post : ${month.posts}">
-                    <div
-                      class="my-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:border-gray-400 hover:shadow dark:border-slate-600 dark:bg-slate-700 dark:hover:border-slate-700"
-                    >
-                      <div class="relative flex flex-col gap-2 p-4">
-                        <div class="flex min-w-0 flex-wrap items-center justify-between gap-4">
-                          <div class="col-span-7 flex flex-nowrap truncate">
-                            <a
-                              th:href="${post.status.permalink}"
-                              class="truncate text-xl font-medium text-gray-900 hover:text-gray-500 hover:underline dark:text-slate-50 dark:hover:text-white"
-                              th:text="${post.spec.title}"
-                            ></a>
-                          </div>
-                          <div class="col-span-3 col-start-11">
-                            <p
-                              class="truncate text-sm text-gray-600 dark:text-slate-100"
-                              th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
-                            ></p>
+                    <article class="group relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-blue-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-blue-900">
+                      <div class="flex flex-col gap-3">
+                        <div class="flex items-center justify-between gap-4">
+                          <time class="text-sm font-medium text-slate-500" th:text="${#dates.format(post.spec.publishTime, 'MM-dd')}"></time>
+                          <div class="flex flex-wrap gap-2">
+                            <span th:each="tag : ${post.tags}" th:text="|#${tag.spec.displayName}|" class="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 dark:bg-slate-700 dark:text-slate-400"></span>
                           </div>
                         </div>
-                        <div
-                          th:if="${not #lists.isEmpty(post.categories)} or ${not #lists.isEmpty(post.tags)}"
-                          class="flex flex-wrap items-center gap-2"
-                        >
-                          <a
-                            th:if="${#lists.size(post.categories)} gt 0"
-                            th:href="@{${post.categories[0].status.permalink}}"
-                            th:title="${post.categories[0].spec.displayName}"
-                            th:text="${post.categories[0].spec.displayName}"
-                            class="mr-1 text-sm font-medium text-gray-800 hover:text-gray-900 dark:text-slate-500 dark:hover:text-slate-600"
-                          >
-                          </a>
-                          <a
-                            th:each="tag : ${post.tags}"
-                            th:href="@{${tag.status.permalink}}"
-                            th:title="${tag.spec.displayName}"
-                            th:text="|#${tag.spec.displayName}|"
-                            class="cursor-pointer text-sm italic text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-500"
-                          >
-                          </a>
-                        </div>
-                        <div class="line-clamp-2 text-sm font-light dark:text-slate-200">
-                          <th:block th:text="${post.status.excerpt}"></th:block>
-                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
+                          <a th:href="${post.status.permalink}" th:text="${post.spec.title}"></a>
+                        </h3>
+                        <p class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400" th:text="${post.status.excerpt}"></p>
                       </div>
-                    </div>
+                    </article>
                   </th:block>
                 </div>
               </div>
@@ -86,4 +117,10 @@
     </div>
     <th:block th:replace="~{modules/sidebar :: sidebar(prepend = null)}" />
   </section>
+
+  <!-- 传递数据到 JS -->
+  <script th:inline="javascript">
+    window.archiveData = /*[[${archives.items}]]*/ [];
+  </script>
+  <script type="module" src="/src/assets/archives.ts"></script>
 </include>
