@@ -1,0 +1,39 @@
+<div
+  class="group relative w-full overflow-hidden rounded-2xl bg-white/80 p-5 backdrop-blur-md transition-all duration-500 hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.15)] dark:bg-slate-800/80 border border-gray-100/50 dark:border-slate-700/50"
+>
+  <!-- Tech background decoration -->
+  <div class="absolute -right-4 -top-4 size-20 rounded-full bg-blue-500/5 blur-2xl transition-all duration-500 group-hover:bg-blue-500/10"></div>
+  
+  <div class="relative z-10">
+    <div class="mb-4 flex items-center gap-2">
+      <div class="flex size-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 shadow-sm">
+        <span class="i-tabler-quote text-lg"></span>
+      </div>
+      <h2 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">每日一言</h2>
+      <div class="ml-auto flex gap-1">
+        <span class="size-1 rounded-full bg-blue-400/40"></span>
+        <span class="size-1 rounded-full bg-blue-400/60"></span>
+        <span class="size-1 animate-pulse rounded-full bg-blue-500"></span>
+      </div>
+    </div>
+    
+    <div x-data="{ 
+      quote: '加载中...', 
+      from: '', 
+      async fetchQuote() {
+        try {
+          const response = await fetch('https://v1.hitokoto.cn');
+          const data = await response.json();
+          this.quote = data.hitokoto;
+          this.from = '—— ' + (data.from_who || '') + ' 「' + data.from + '」';
+        } catch (e) {
+          this.quote = '生命不息，奋斗不止。';
+          this.from = '—— 佚名';
+        }
+      } 
+    }" x-init="fetchQuote()">
+      <p class="text-sm leading-relaxed text-gray-700 dark:text-slate-200 font-medium" x-text="quote"></p>
+      <p class="mt-3 text-right text-xs text-gray-400 dark:text-slate-500 italic" x-text="from"></p>
+    </div>
+  </div>
+</div>

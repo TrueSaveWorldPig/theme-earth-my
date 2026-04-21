@@ -1,76 +1,38 @@
 <div
-  class="w-full overflow-hidden rounded-xl bg-white p-3 shadow transition-all duration-500 hover:shadow-md dark:bg-slate-800"
+  class="group relative w-full overflow-hidden rounded-2xl bg-white/80 p-5 backdrop-blur-md transition-all duration-500 hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.15)] dark:bg-slate-800/80 border border-gray-100/50 dark:border-slate-700/50"
 >
-  <h2 class="inline-flex items-center gap-2 text-base dark:text-slate-50">
-    <span class="i-tabler-message-circle text-lg"></span>
-    <th:block th:text="#{widget.latestComments.title}"></th:block>
-  </h2>
-  <div>
-    <ul role="list" class="divide-y divide-gray-100 dark:divide-slate-700">
-      <li class="py-3">
-        <div class="flex space-x-3">
-          <img class="size-6 rounded-full" src="https://ryanc.cc/avatar" alt="Comment Avatar" />
-          <div class="flex-1 space-y-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium dark:text-slate-100">Phyllis McKenzie</h3>
-              <p class="text-sm text-gray-500 dark:text-slate-500">1h</p>
+  <div class="mb-4 flex items-center gap-2">
+    <div class="flex size-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 shadow-sm">
+      <span class="i-tabler-message-circle text-lg"></span>
+    </div>
+    <h2 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400" th:text="#{widget.latestComments.title}">最新评论</h2>
+  </div>
+
+  <div th:with="comments = ${commentFinder.list(null, 5)}">
+    <ul th:if="${not #lists.isEmpty(comments)}" role="list" class="space-y-4">
+      <li th:each="comment : ${comments}" class="group/item relative">
+        <div class="flex items-start space-x-3">
+          <div class="relative flex-shrink-0">
+            <img class="size-8 rounded-full border border-gray-100 dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover/item:scale-110" 
+                 th:src="${comment.spec.owner.avatar ?: #theme.assets('/images/default-avatar.svg')}" 
+                 th:alt="${comment.spec.owner.displayName}" />
+            <div class="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-white bg-green-500 dark:border-slate-800"></div>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="truncate text-xs font-bold text-gray-900 dark:text-slate-100" th:text="${comment.spec.owner.displayName}"></h3>
+              <span class="flex-shrink-0 text-[10px] text-gray-400 dark:text-slate-500" th:text="${#dates.format(comment.metadata.creationTimestamp,'MM-dd')}"></span>
             </div>
-            <p class="text-sm text-gray-500 dark:text-slate-400">
-              Fugit quae nam dolores impedit quia fuga pariatur dignissimos recusandae.
-            </p>
+            <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-slate-400" th:text="${comment.spec.content}"></p>
           </div>
         </div>
-      </li>
-      <li class="py-3">
-        <div class="flex space-x-3">
-          <img class="size-6 rounded-full" src="https://ryanc.cc/avatar" alt="Comment Avatar" />
-          <div class="flex-1 space-y-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium dark:text-slate-100">Willard Labadie I</h3>
-              <p class="text-sm text-gray-500 dark:text-slate-500">1h</p>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-slate-400">
-              Officiis quis quos repudiandae quam delectus impedit quidem amet ut.
-            </p>
-          </div>
-        </div>
-      </li>
-      <li class="py-3">
-        <div class="flex space-x-3">
-          <img class="size-6 rounded-full" src="https://ryanc.cc/avatar" alt="Comment Avatar" />
-          <div class="flex-1 space-y-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium dark:text-slate-100">Miss Leonard Sporer</h3>
-              <p class="text-sm text-gray-500 dark:text-slate-500">1h</p>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-slate-400">Nesciunt dolores et debitis.</p>
-          </div>
-        </div>
-      </li>
-      <li class="py-3">
-        <div class="flex space-x-3">
-          <img class="size-6 rounded-full" src="https://ryanc.cc/avatar" alt="Comment Avatar" />
-          <div class="flex-1 space-y-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium dark:text-slate-100">Tyrone Fisher</h3>
-              <p class="text-sm text-gray-500 dark:text-slate-500">1h</p>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-slate-400">Et nesciunt dolorem eum ut corporis.</p>
-          </div>
-        </div>
-      </li>
-      <li class="py-3">
-        <div class="flex space-x-3">
-          <img class="size-6 rounded-full" src="https://ryanc.cc/avatar" alt="Comment Avatar" />
-          <div class="flex-1 space-y-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium dark:text-slate-100">Angie Braun V</h3>
-              <p class="text-sm text-gray-500 dark:text-slate-500">1h</p>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-slate-400">Autem labore ipsam earum reiciendis eum omnis.</p>
-          </div>
-        </div>
+        <!-- Decorative line -->
+        <div class="absolute -left-1.5 top-0 h-full w-0.5 scale-y-0 bg-blue-500 transition-transform duration-300 group-hover/item:scale-y-100"></div>
       </li>
     </ul>
+    
+    <div th:if="${#lists.isEmpty(comments)}" class="py-6 text-center">
+      <span class="text-xs text-gray-400 dark:text-slate-500 italic">暂无评论...</span>
+    </div>
   </div>
 </div>
