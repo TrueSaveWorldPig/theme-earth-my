@@ -3,22 +3,17 @@
     <th:block th:replace="${prepend}" />
   </th:block>
 
-  <th:block th:if="${_templateId != 'post'}">
-    <!-- 每日一言 - 置顶组件 -->
-    <th:block th:replace="~{modules/widgets/daily-quote}" />
+  <th:block th:replace="~{modules/widgets/daily-quote}" />
 
-    <th:block th:with="widgets = ${theme.config.sidebar.widgets} ">
-      <th:block th:each="widget : ${widgets}">
-        <th:block th:with="options = ${widget.options}">
-          <!-- 默认组件样式改造：增加科技感包装 -->
-          <div class="sidebar-widget-wrapper">
-            <th:block th:replace="~{'modules/widgets/'+${widget.value}}" />
-          </div>
-        </th:block>
+  <th:block th:with="widgets = ${theme.config.sidebar.widgets} ">
+    <th:block th:each="widget : ${widgets}">
+      <th:block th:with="options = ${widget.options}">
+        <div class="sidebar-widget-wrapper">
+          <th:block th:replace="~{'modules/widgets/'+${widget.value}}" />
+        </div>
       </th:block>
     </th:block>
-
-    <!-- 最新评论 - 底部组件 -->
-    <th:block th:replace="~{modules/widgets/latest-comments}" />
   </th:block>
+
+  <!-- <th:block th:replace="~{modules/widgets/latest-comments}" /> -->
 </aside>
