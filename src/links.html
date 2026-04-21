@@ -16,30 +16,115 @@
           <th:block th:each="group : ${groups}">
             <h2 class="mt-2 text-lg font-medium dark:text-slate-50" th:text="${group.spec.displayName}"></h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <a th:each="link : ${group.links}" th:href="${link.spec.url}" target="_blank">
+              <a th:each="link : ${group.links}" th:href="${link.spec.url}" target="_blank" class="group">
                 <div
-                  class="relative flex items-center space-x-3 rounded border border-gray-300 bg-white px-5 py-4 shadow-sm hover:border-gray-400 hover:shadow dark:border-slate-600 dark:bg-slate-700 dark:hover:border-slate-700"
+                  class="relative flex items-center space-x-3 rounded-lg border border-gray-200/50 bg-white/70 px-5 py-4 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.4)] dark:border-slate-700/50 dark:bg-slate-800/60 dark:hover:border-blue-400/50"
                 >
-                  <div class="flex-shrink-0">
-                    <img class="size-12 rounded-full" th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" />
+                  <div class="flex-shrink-0 transition-transform duration-300 group-hover:rotate-12">
+                    <img class="size-12 rounded-full border-2 border-transparent group-hover:border-blue-500/30" th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" />
                   </div>
                   <div class="min-w-0 flex-1">
                     <div>
                       <p
-                        class="truncate text-sm font-medium text-gray-900 dark:text-slate-100"
+                        class="truncate text-sm font-semibold text-gray-900 transition-colors duration-300 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400"
                         th:text="${link.spec.displayName}"
                       ></p>
                       <p
-                        class="truncate text-sm text-gray-500 dark:text-slate-400"
+                        class="truncate text-xs text-gray-500 dark:text-slate-400"
                         th:text="${link.spec.description}"
                       ></p>
                     </div>
+                  </div>
+                  <div class="absolute -right-2 -top-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <span class="flex size-4 items-center justify-center rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]">
+                      <span class="i-tabler-external-link size-2.5 text-white"></span>
+                    </span>
                   </div>
                 </div>
               </a>
             </div>
           </th:block>
         </div>
+
+        <div class="mt-12 rounded-xl border border-blue-500/20 bg-blue-50/30 p-6 dark:bg-blue-900/10 relative overflow-hidden">
+          <!-- Background decoration for tech-style -->
+          <div class="absolute -right-8 -top-8 size-24 rounded-full bg-blue-500/10 blur-2xl"></div>
+          <div class="absolute -left-8 -bottom-8 size-24 rounded-full bg-blue-500/10 blur-2xl"></div>
+
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <span class="i-tabler-info-circle text-xl text-blue-500"></span>
+              <h2 class="text-lg font-medium dark:text-slate-50">本站信息</h2>
+            </div>
+            <button 
+              class="inline-flex items-center gap-2 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-medium text-white transition-all hover:bg-blue-600 hover:shadow-lg active:scale-95"
+              th:attr="onclick=|navigator.clipboard.writeText('名称：${site.title}\n地址：${site.url}\nLogo：${site.logo}\nRSS：${site.url}/rss.xml\nMoments RSS：${site.url}/moments/rss.xml\nFavicon：${site.favicon}')|"
+            >
+              <span class="i-tabler-copy size-3.5"></span>
+              一键复制全站配置
+            </button>
+          </div>
+          <p class="mb-6 text-sm text-gray-600 dark:text-slate-400">
+            如果您希望与本站交换友链，可以参考以下信息。欢迎各路大神互换友链！
+          </p>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">站点名称</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="${site.title}"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.title}')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">站点地址</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="${site.url}"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.url}')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">站点 Logo</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="${site.logo}"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.logo}')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">站点 RSS</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="|${site.url}/rss.xml|"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.url}/rss.xml')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">Moments RSS</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="|${site.url}/moments/rss.xml|"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.url}/moments/rss.xml')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-slate-500">站点 Favicon</span>
+              <div class="flex items-center gap-2 rounded-md bg-white/50 px-3 py-2 dark:bg-slate-800/50">
+                <span class="truncate text-sm font-medium dark:text-slate-200" th:text="${site.favicon}"></span>
+                <button class="ml-auto text-gray-400 hover:text-blue-500 transition-colors" th:attr="onclick=|navigator.clipboard.writeText('${site.favicon}')|">
+                  <span class="i-tabler-copy size-4"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <hr th:if="${haloCommentEnabled}" class="my-10 dark:border-slate-700" />
         <div th:if="${haloCommentEnabled}">
           <halo:comment group="plugin.halo.run" kind="Plugin" th:attr="name=${pluginName}" />
