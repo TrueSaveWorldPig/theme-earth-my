@@ -1,33 +1,68 @@
 <div
-  class="w-full overflow-hidden rounded-xl bg-white p-3 shadow transition-all duration-500 hover:shadow-md dark:bg-slate-800"
+  class="group/widget w-full overflow-hidden rounded-2xl border border-gray-200/50 bg-white/70 p-4 shadow-sm backdrop-blur-md transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.2)] dark:border-slate-700/50 dark:bg-slate-900/70"
 >
-  <h2 class="inline-flex items-center gap-2 text-base dark:text-slate-50">
-    <span class="i-tabler-stairs-up text-lg text-red-600 dark:text-red-700"></span>
-    <th:block th:text="#{widget.popularPosts.title}"></th:block>
-  </h2>
-  <div>
-    <ul
-      role="list"
-      class="divide-y divide-gray-100 dark:divide-slate-700"
-      th:with="posts = ${postFinder.list({page: 1,size: 10,sort: {'stats.visit,desc'}})}"
-    >
-      <li class="py-3" th:each="post : ${posts}">
-        <div class="flex items-center justify-between">
-          <div class="flex flex-col gap-1">
-            <h3 class="line-clamp-2 text-sm font-medium hover:text-gray-500 hover:underline dark:text-slate-100">
-              <a th:text="${post.spec.title}" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"></a>
-            </h3>
-            <p
-              class="text-xs tabular-nums text-gray-500 dark:text-slate-400"
-              th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"
-            ></p>
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="flex items-center gap-2 text-sm font-bold tracking-wider text-gray-800 dark:text-slate-200">
+      <div class="relative">
+        <span class="i-tabler-trending-up relative z-10 size-5 text-blue-600 dark:text-blue-400"></span>
+        <div class="absolute inset-0 animate-pulse bg-blue-400/20 blur-sm"></div>
+      </div>
+      <th:block th:text="#{widget.popularPosts.title}"></th:block>
+    </h2>
+    <div class="h-px flex-1 bg-gradient-to-r from-blue-500/50 to-transparent ml-4"></div>
+  </div>
+
+  <div
+    th:with="posts = ${postFinder.list({page: 1,size: 6,sort: {'stats.visit,desc'}})}"
+  >
+    <ul role="list" class="space-y-1">
+      <li th:each="post, iterStat : ${posts.items}" class="group/item">
+        <a
+          th:href="@{${post.status.permalink}}"
+          class="relative flex items-center gap-3 overflow-hidden rounded-xl p-2 transition-all duration-300 hover:bg-blue-500/5 dark:hover:bg-blue-400/5"
+        >
+          <!-- Ranking Number Badge -->
+          <div class="relative flex size-8 shrink-0 items-center justify-center font-mono text-sm font-bold italic">
+            <span
+              th:classappend="${iterStat.index < 3 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-slate-500'}"
+              th:text="${iterStat.index + 1}"
+              class="relative z-10"
+            ></span>
+            <!-- Top 3 glow background -->
+            <div
+              th:if="${iterStat.index < 3}"
+              class="absolute inset-0 rounded-lg bg-blue-500/10 dark:bg-blue-400/10"
+            ></div>
+            <div
+              th:if="${iterStat.index < 3}"
+              class="absolute -inset-0.5 rounded-lg border border-blue-500/20 opacity-0 transition-opacity group-hover/item:opacity-100 dark:border-blue-400/20"
+            ></div>
           </div>
-          <div class="inline-flex items-center gap-1 text-xs text-gray-600 dark:text-slate-500">
-            <span class="i-tabler-eye"></span>
-            <span th:text="${post.stats.visit ?: 0}" class="tabular-nums"> </span>
+
+          <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+            <h3
+              class="truncate text-[13px] font-medium text-gray-700 transition-colors group-hover/item:text-blue-600 dark:text-slate-300 dark:group-hover/item:text-blue-400"
+              th:text="${post.spec.title}"
+            ></h3>
+            <div class="flex items-center gap-3 text-[10px] text-gray-400 dark:text-slate-500">
+              <span class="flex items-center gap-1">
+                <span class="i-tabler-calendar size-3"></span>
+                <th:block th:text="${#dates.format(post.spec.publishTime,'MM-dd')}"></th:block>
+              </span>
+              <span class="flex items-center gap-1">
+                <span class="i-tabler-eye size-3 text-blue-500/70"></span>
+                <th:block th:text="${post.stats.visit ?: 0}"></th:block>
+              </span>
+            </div>
           </div>
-        </div>
+
+          <!-- Hover arrow -->
+          <div class="translate-x-2 opacity-0 transition-all duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100">
+            <span class="i-tabler-chevron-right size-4 text-blue-500"></span>
+          </div>
+        </a>
       </li>
     </ul>
   </div>
 </div>
+

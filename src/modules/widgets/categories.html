@@ -1,13 +1,20 @@
 <div
-  class="w-full overflow-hidden rounded-xl bg-white p-3 shadow transition-all duration-500 hover:shadow-md dark:bg-slate-800"
+  class="group/widget w-full overflow-hidden rounded-2xl border border-gray-200/50 bg-white/70 p-4 shadow-sm backdrop-blur-md transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.2)] dark:border-slate-700/50 dark:bg-slate-900/70"
 >
-  <h2 class="inline-flex items-center gap-2 text-base dark:text-slate-50">
-    <span class="i-tabler-category text-lg"></span>
-    <th:block th:text="#{widget.categories.title}"></th:block>
-  </h2>
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="flex items-center gap-2 text-sm font-bold tracking-wider text-gray-800 dark:text-slate-200">
+      <div class="relative">
+        <span class="i-tabler-category relative z-10 size-5 text-blue-600 dark:text-blue-400"></span>
+        <div class="absolute inset-0 animate-pulse bg-blue-400/20 blur-sm"></div>
+      </div>
+      <th:block th:text="#{widget.categories.title}"></th:block>
+    </h2>
+    <div class="h-px flex-1 bg-gradient-to-r from-blue-500/50 to-transparent ml-4"></div>
+  </div>
   <div class="mt-2" th:with="categories = ${categoryFinder.listAsTree()}">
     <ul class="space-y-1">
       <li th:replace="~{modules/category-tree :: single(categories=${categories})}" />
     </ul>
   </div>
 </div>
+
