@@ -8,6 +8,21 @@
     <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/5 via-transparent to-blue-500/5"></div>
   </div>
 
+  <!-- Pinned Marker (Always top-right of the card) -->
+  <div th:if="${post.spec.pinned}" class="absolute right-0 top-0 z-30" th:title="#{fragment.postCard.pinned}">
+    <div class="relative overflow-hidden">
+      <!-- Main badge -->
+      <div class="flex items-center gap-1.5 rounded-bl-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-[0_4px_15px_-3px_rgba(37,99,235,0.6)] backdrop-blur-sm">
+        <span class="i-tabler-pin-filled size-3.5 animate-bounce"></span>
+        <span th:text="#{fragment.postCard.pinned}">置顶</span>
+      </div>
+      <!-- Decorative light sweep -->
+      <div class="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+      <!-- Corner pulse light -->
+      <div class="absolute right-1 top-1 size-1.5 rounded-full bg-blue-300 shadow-[0_0_8px_rgba(147,197,253,0.8)]"></div>
+    </div>
+  </div>
+
   <div
     th:if="${cover} and ${not #strings.isEmpty(post.spec.cover)}"
     class="relative z-10 aspect-h-9 aspect-w-16 overflow-hidden"
@@ -25,19 +40,6 @@
         th:classappend="${animation} ? 'group-hover:scale-105'"
       />
     </a>
-    <div th:if="${post.spec.pinned}" class="absolute right-0 top-0 z-20" th:title="#{fragment.postCard.pinned}">
-      <div class="relative overflow-hidden">
-        <!-- Main badge -->
-        <div class="flex items-center gap-1.5 rounded-bl-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-[0_4px_15px_-3px_rgba(37,99,235,0.6)] backdrop-blur-sm">
-          <span class="i-tabler-pin-filled size-3.5 animate-bounce"></span>
-          <span th:text="#{fragment.postCard.pinned}">置顶</span>
-        </div>
-        <!-- Decorative light sweep -->
-        <div class="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-        <!-- Corner pulse light -->
-        <div class="absolute right-1 top-1 size-1.5 rounded-full bg-blue-300 shadow-[0_0_8px_rgba(147,197,253,0.8)]"></div>
-      </div>
-    </div>
   </div>
   <div
     class="relative col-span-3 grid h-full grid-cols-1 content-between gap-2 p-4"
