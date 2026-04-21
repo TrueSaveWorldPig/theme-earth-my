@@ -25,12 +25,17 @@
         th:classappend="${animation} ? 'group-hover:scale-105'"
       />
     </a>
-    <div th:if="${post.spec.pinned}" class="absolute left-0 top-0 z-10" th:title="#{fragment.postCard.pinned}">
-      <div class="relative flex items-center gap-1.5 rounded-br-xl bg-blue-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-[4px_4px_10px_-2px_rgba(37,99,235,0.5)] backdrop-blur-sm">
-        <span class="i-tabler-pin size-3.5 rotate-45"></span>
-        <span th:text="#{fragment.postCard.pinned}">置顶</span>
-        <!-- Decorative corner light -->
-        <div class="absolute -right-1 -top-1 size-2 animate-pulse rounded-full bg-blue-400 blur-[2px]"></div>
+    <div th:if="${post.spec.pinned}" class="absolute right-0 top-0 z-20" th:title="#{fragment.postCard.pinned}">
+      <div class="relative overflow-hidden">
+        <!-- Main badge -->
+        <div class="flex items-center gap-1.5 rounded-bl-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-[0_4px_15px_-3px_rgba(37,99,235,0.6)] backdrop-blur-sm">
+          <span class="i-tabler-pin-filled size-3.5 animate-bounce"></span>
+          <span th:text="#{fragment.postCard.pinned}">置顶</span>
+        </div>
+        <!-- Decorative light sweep -->
+        <div class="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+        <!-- Corner pulse light -->
+        <div class="absolute right-1 top-1 size-1.5 rounded-full bg-blue-300 shadow-[0_0_8px_rgba(147,197,253,0.8)]"></div>
       </div>
     </div>
   </div>

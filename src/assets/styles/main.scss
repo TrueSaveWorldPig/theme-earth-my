@@ -49,3 +49,9 @@ select {
 .timeline-dot-active {
   animation: timeline-pulse 2s infinite;
 }
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
