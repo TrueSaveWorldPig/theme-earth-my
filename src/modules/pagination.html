@@ -1,29 +1,34 @@
 <div th:fragment="pagination(context,prevUrl,nextUrl,totalPages,page,hasPrevious,hasNext)">
-  <div class="mt-6 flex items-center justify-between" th:if="${hasPrevious || hasNext}">
+  <div class="mt-12 flex items-center justify-between" th:if="${hasPrevious || hasNext}">
     <a
       th:href="@{${prevUrl}}"
-      class="whitespace-no-wrap group inline-flex items-center justify-center gap-1 rounded-md border border-gray-200 bg-white px-4 py-1 text-sm font-medium leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:shadow-none focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white"
-      th:classappend="${!hasPrevious ? 'pointer-events-none opacity-60' : ''}"
+      class="group inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200/50 bg-white/50 px-5 py-2 text-sm font-medium text-gray-600 backdrop-blur-sm transition-all duration-300 hover:border-blue-500/50 hover:text-blue-600 hover:shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)] dark:border-slate-700/50 dark:bg-slate-800/50 dark:text-slate-300 dark:hover:text-blue-400"
+      th:classappend="${!hasPrevious ? 'pointer-events-none opacity-40 grayscale' : ''}"
     >
-      <span class="i-tabler-arrow-left text-lg transition-all group-hover:-translate-x-1"></span>
+      <span class="i-tabler-chevron-left text-lg transition-transform duration-300 group-hover:-translate-x-1"></span>
       <span th:text="#{common.previousPage}"></span>
     </a>
-    <select id="pagination" class="bg-transparent text-sm text-gray-900 outline-none dark:text-slate-50">
-      <option
-        th:each="i : ${#numbers.sequence(1,totalPages)}"
-        th:selected="${i == page}"
-        th:value="${i}"
-        th:text="|${i} / ${totalPages}|"
-        class="bg-white text-gray-900 dark:bg-slate-700 dark:text-slate-50"
-      ></option>
-    </select>
+    
+    <div class="relative flex items-center gap-2 rounded-xl border border-gray-200/50 bg-white/50 px-4 py-2 backdrop-blur-sm dark:border-slate-700/50 dark:bg-slate-800/50">
+      <select id="pagination" class="appearance-none bg-transparent pr-6 text-sm font-medium text-gray-900 outline-none dark:text-slate-100 cursor-pointer">
+        <option
+          th:each="i : ${#numbers.sequence(1,totalPages)}"
+          th:selected="${i == page}"
+          th:value="${i}"
+          th:text="|${i} / ${totalPages}|"
+          class="bg-white text-gray-900 dark:bg-slate-800 dark:text-slate-100"
+        ></option>
+      </select>
+      <span class="i-tabler-selector absolute right-3 size-4 text-gray-400 pointer-events-none"></span>
+    </div>
+
     <a
       th:href="@{${nextUrl}}"
-      class="whitespace-no-wrap group inline-flex items-center justify-center gap-1 rounded-md border border-gray-200 bg-white px-4 py-1 text-sm font-medium leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:shadow-none focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white"
-      th:classappend="${!hasNext ? 'pointer-events-none opacity-60' : ''}"
+      class="group inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200/50 bg-white/50 px-5 py-2 text-sm font-medium text-gray-600 backdrop-blur-sm transition-all duration-300 hover:border-blue-500/50 hover:text-blue-600 hover:shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)] dark:border-slate-700/50 dark:bg-slate-800/50 dark:text-slate-300 dark:hover:text-blue-400"
+      th:classappend="${!hasNext ? 'pointer-events-none opacity-40 grayscale' : ''}"
     >
       <span th:text="#{common.nextPage}"></span>
-      <span class="i-tabler-arrow-right text-lg transition-all group-hover:translate-x-1"></span>
+      <span class="i-tabler-chevron-right text-lg transition-transform duration-300 group-hover:translate-x-1"></span>
     </a>
   </div>
 

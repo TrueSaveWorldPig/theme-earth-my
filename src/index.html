@@ -6,15 +6,21 @@
     <th:block th:replace="~{modules/hero :: hero(isHome = true, cover = null, title = null)}" />
   </template>
 
-  <section class="mx-auto mt-6 grid max-w-7xl grid-cols-1 gap-6 px-4 md:grid-cols-[1fr_18rem] lg:px-6">
+  <section class="relative mx-auto mt-6 grid max-w-7xl grid-cols-1 gap-6 px-4 md:grid-cols-[1fr_18rem] lg:px-6">
+    <!-- Tech background decorations -->
+    <div class="absolute -left-24 top-0 -z-10 size-96 rounded-full bg-blue-500/5 blur-[100px] pointer-events-none"></div>
+    <div class="absolute -right-24 bottom-0 -z-10 size-96 rounded-full bg-blue-500/5 blur-[100px] pointer-events-none"></div>
+
     <div class="z-0 min-w-0">
-      <th:block th:replace="~{modules/category-filter}" />
+      <div class="mb-8 overflow-hidden rounded-2xl bg-white/40 p-4 dark:bg-slate-900/40 backdrop-blur-md border border-gray-200/30 dark:border-slate-700/30 shadow-sm">
+        <th:block th:replace="~{modules/category-filter}" />
+      </div>
 
       <div
         id="post-list"
         th:if="${posts.total gt 0}"
         th:with="postItems=${posts.items},list_layout=${theme.config.layout.post_list_layout}"
-        class="mt-6 grid grid-cols-1 gap-6"
+        class="mt-6 grid grid-cols-1 gap-8"
         th:classappend="|${list_layout == 'grid_3' ? 'md:grid-cols-2 xl:grid-cols-3' : ''} ${list_layout == 'grid_2' ? 'md:grid-cols-2' : ''}|"
       >
         <th:block th:each="post : ${postItems}">
