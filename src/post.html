@@ -26,11 +26,11 @@
 
   <th:block th:if="${_templateId == 'post'}">
     <section
-      class="mx-auto mt-6 grid max-w-4xl gap-6 px-4 lg:px-6"
+      class="mx-auto mt-6 flex w-full max-w-7xl flex-col gap-6 px-4 lg:px-6"
       th:classappend="${theme.config.layout.content_header} and ${not #strings.isEmpty(post.spec.cover)} ? '!-mt-20' : ''"
     >
-      <div class="z-0 min-w-0">
-        <div x-data="upvote('post','content.halo.run','posts')" class="rounded-xl bg-white p-4 dark:bg-slate-800">
+      <div class="z-0 w-full min-w-0">
+        <div x-data="upvote('post','content.halo.run','posts')" class="w-full rounded-xl bg-white p-4 dark:bg-slate-800 lg:p-10">
           <div
             th:attr="x-data=|{name:'${post.metadata.name}'}|"
             class="flex flex-col items-center justify-between gap-2 sm:flex-row"
@@ -145,7 +145,7 @@
           </div>
           <article
             id="content"
-            class="!max-w-none break-words"
+            class="w-full !max-w-none break-words"
             th:classappend="${theme.config.post.content_style == 'github' ? 'markdown-body' : 'tailwind-typography'}"
             th:utext="${post.content.content}"
           ></article>
@@ -313,7 +313,7 @@
           </div>
           <article
             id="content"
-            class="!max-w-none break-words"
+            class="w-full !max-w-none break-words"
             th:classappend="${theme.config.post.content_style == 'github' ? 'markdown-body' : 'tailwind-typography'}"
             th:utext="${post.content.content}"
           ></article>
