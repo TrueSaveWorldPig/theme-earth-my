@@ -27,12 +27,12 @@
   <div class="absolute left-0 top-0 z-30">
     <div class="relative overflow-hidden">
       <!-- Original Badge -->
-      <div th:if="${post.original}" class="flex items-center gap-1 rounded-br-2xl bg-gradient-to-br from-cyan-500/90 to-blue-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_4px_12px_-2px_rgba(6,182,212,0.4)] backdrop-blur-md">
+      <div th:if="${post.metadata.annotations['content.halo.run/original']}" class="flex items-center gap-1 rounded-br-2xl bg-gradient-to-br from-cyan-500/90 to-blue-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_4px_12px_-2px_rgba(6,182,212,0.4)] backdrop-blur-md">
         <span class="i-tabler-certificate size-3.5"></span>
         <span th:text="#{fragment.postCard.original}">原创</span>
       </div>
       <!-- Reprint Badge -->
-      <div th:if="${not post.original}" class="flex items-center gap-1 rounded-br-2xl bg-gradient-to-br from-orange-500/90 to-red-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_4px_12px_-2px_rgba(249,115,22,0.4)] backdrop-blur-md">
+      <div th:if="${not post.metadata.annotations['content.halo.run/original']}" class="flex items-center gap-1 rounded-br-2xl bg-gradient-to-br from-orange-500/90 to-red-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_4px_12px_-2px_rgba(249,115,22,0.4)] backdrop-blur-md">
         <span class="i-tabler-repeat size-3.5"></span>
         <span th:text="#{fragment.postCard.reprint}">转载</span>
       </div>
