@@ -173,12 +173,78 @@
             >
             </a>
           </div>
+          <div class="mb-6 flex items-center justify-end gap-2">
+            <th:block
+              th:with="isOriginal = ${post.metadata.annotations['content.halo.run/original'] != 'false'}"
+            >
+              <div
+                th:if="${isOriginal}"
+                class="flex items-center gap-1 rounded-bl-2xl bg-gradient-to-br from-emerald-500/90 to-teal-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[-4px_4px_12px_-2px_rgba(16,185,129,0.4)] backdrop-blur-md"
+              >
+                <span class="i-tabler-seal size-3.5"></span>
+                <span th:text="#{fragment.postCard.original}">原创</span>
+              </div>
+              <div
+                th:unless="${isOriginal}"
+                class="flex items-center gap-1 rounded-bl-2xl bg-gradient-to-br from-orange-500/90 to-red-600/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[-4px_4px_12px_-2px_rgba(249,115,22,0.4)] backdrop-blur-md"
+              >
+                <span class="i-tabler-repeat size-3.5"></span>
+                <span th:text="#{fragment.postCard.reprint}">转载</span>
+              </div>
+            </th:block>
+          </div>
           <article
             id="content"
             class="w-full !max-w-none break-words"
             th:classappend="${theme.config.post.content_style == 'github' ? 'markdown-body' : 'tailwind-typography'}"
             th:utext="${post.content.content}"
           ></article>
+          <th:block
+            th:with="isOriginal = ${post.metadata.annotations['content.halo.run/original'] != 'false'}"
+          >
+            <div
+              th:if="${isOriginal}"
+              class="mt-8 rounded-xl border border-emerald-100/50 bg-gradient-to-r from-emerald-50/80 to-teal-50/60 p-4 dark:border-emerald-900/30 dark:from-slate-800/80 dark:to-slate-800/60"
+            >
+              <div class="flex items-start gap-3">
+                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+                  <span class="i-tabler-seal text-lg text-emerald-600 dark:text-emerald-400"></span>
+                </div>
+                <div class="flex-1">
+                   <p class="text-sm font-medium text-emerald-700 dark:text-emerald-300" th:text="#{fragment.postCard.original}">原创</p>
+                   <p class="mt-1 text-xs leading-relaxed text-emerald-600/80 dark:text-emerald-400/70" 
+                      th:utext="#{fragment.post.originalStatement(${post.owner.displayName}, ${#dates.format(post.spec.publishTime, 'yyyy年MM月dd日')}, ${post.stats?.words ?: 0})}">
+                     版权声明：本博客原创文章...
+                   </p>
+                 </div>
+               </div>
+             </div>
+             <div
+               th:unless="${isOriginal}"
+               class="mt-8 rounded-xl border border-orange-100/50 bg-gradient-to-r from-orange-50/80 to-red-50/60 p-4 dark:border-orange-900/30 dark:from-slate-800/80 dark:to-slate-800/60"
+             >
+               <div class="flex items-start gap-3">
+                 <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
+                   <span class="i-tabler-repeat text-lg text-orange-600 dark:text-orange-400"></span>
+                 </div>
+                 <div class="flex-1">
+                   <p class="text-sm font-medium text-orange-700 dark:text-orange-300" 
+                      th:utext="#{fragment.post.reprintStatement(${#dates.format(post.spec.publishTime, 'yyyy年MM月dd日')}, ${post.metadata.annotations['content.halo.run/source_title']}, ${post.stats?.words ?: 0})}">
+                     版权声明：本文于...
+                   </p>
+                   <div class="mt-2 flex items-center gap-2">
+                     <span class="text-xs text-orange-600/80 dark:text-orange-400/70" th:text="#{fragment.post.reprintFrom}">转载来源：</span>
+                    <a
+                      th:href="@{${post.metadata.annotations['content.halo.run/source_url']}}"
+                      th:text="${post.metadata.annotations['content.halo.run/source_title']}"
+                      th:target="_blank"
+                      class="text-xs font-medium text-orange-600 underline hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300"
+                    ></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </th:block>
           <div
             class="mt-10 flex flex-col sm:flex-row sm:justify-between"
             th:with="postCursor = ${postFinder.cursor(post.metadata.name)}"
