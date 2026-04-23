@@ -43,7 +43,7 @@
                 th:each="moment : ${moments.items}"
                 th:attr="x-data=|{name: '${moment.metadata.name}', showComment: false, releaseTime: '${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd''T''HH:mm:ss')}'}|"
                 th:with="content=${moment.spec.content}"
-                class="animated fadeIn moment-item flex w-full items-start gap-4"
+                class="animated fadeIn moment-item grid w-full grid-cols-[auto_1fr] gap-x-4 gap-y-2 sm:gap-y-0"
               >
               <div class="moment-avatar-container shrink-0">
                 <img
@@ -53,17 +53,17 @@
                   class="size-12 rounded-full"
                 />
               </div>
-              <div class="min-w-0 flex-1">
-                <div class="mb-2 flex items-center justify-between">
-                  <span class="text-sm font-semibold text-gray-900 dark:text-slate-100" th:text="${moment.owner.displayName}"></span>
-                  <div class="flex items-center text-xs text-gray-400 dark:text-slate-500">
-                    <i class="i-tabler-clock-hour-4 mr-1 size-3.5"></i>
-                    <span
-                      x-text="$timeAgo(releaseTime)"
-                      th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
-                    ></span>
-                  </div>
+              <div class="flex min-w-0 items-center justify-between">
+                <span class="text-sm font-semibold text-gray-900 dark:text-slate-100" th:text="${moment.owner.displayName}"></span>
+                <div class="flex items-center text-xs text-gray-400 dark:text-slate-500">
+                  <i class="i-tabler-clock-hour-4 mr-1 size-3.5"></i>
+                  <span
+                    x-text="$timeAgo(releaseTime)"
+                    th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
+                  ></span>
                 </div>
+              </div>
+              <div class="col-span-2 min-w-0 sm:col-span-1 sm:col-start-2">
                 <div
                   th:utext="${content.html}"
                   class="moment-content prose prose-base !max-w-none break-words dark:prose-invert prose-pre:p-0"
