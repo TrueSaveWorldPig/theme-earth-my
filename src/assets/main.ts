@@ -31,13 +31,23 @@ function getCravatarUrl(email: string): string {
   return `https://cn.cravatar.com/avatar/${emailMd5}`;
 }
 
+function extractEmail(value: string): string | null {
+  const normalized = value.trim();
+  const match = normalized.match(/[^\s<>"']+@[^\s<>"']+/);
+  return match ? match[0] : null;
+}
+
 function initCommentAvatars(): void {
   const avatars = document.querySelectorAll<HTMLImageElement>(
     "img[data-cravatar-email]"
   );
   avatars.forEach((img) => {
-    const email = img.getAttribute("data-cravatar-email");
-    if (email && email.includes("@")) {
+    const raw = img.getAttribute("data-cravatar-email");
+    if (!raw) {
+      return;
+    }
+    const email = extractEmail(raw);
+    if (email) {
       img.src = getCravatarUrl(email);
     }
   });
