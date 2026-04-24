@@ -1,29 +1,46 @@
 <div
-  class="group relative w-full overflow-hidden rounded-2xl bg-white/80 p-5 backdrop-blur-md transition-all duration-500 hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.15)] dark:bg-slate-800/80 border border-gray-100/50 dark:border-slate-700/50"
+  class="group/widget w-full overflow-hidden rounded-2xl border border-gray-200/50 bg-white/70 p-4 shadow-sm backdrop-blur-md transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.2)] dark:border-slate-700/50 dark:bg-slate-900/70"
 >
-  <!-- Tech background decoration -->
-  <div class="absolute -right-4 -top-4 size-20 rounded-full bg-blue-500/5 blur-2xl transition-all duration-500 group-hover:bg-blue-500/10"></div>
-  
-  <div class="relative z-10">
-    <div class="mb-4 flex items-center gap-2">
-      <div class="flex size-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 shadow-sm">
-        <span class="i-tabler-link text-lg"></span>
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="flex items-center gap-2 text-sm font-bold tracking-wider text-gray-800 dark:text-slate-200">
+      <div class="relative">
+        <span class="i-tabler-link relative z-10 size-5 text-blue-600 dark:text-blue-400"></span>
+        <div class="absolute inset-0 animate-pulse bg-blue-400/20 blur-sm"></div>
       </div>
-      <h2 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">随机传送</h2>
-      <div class="ml-auto flex gap-1">
-        <span class="size-1 rounded-full bg-blue-400/40"></span>
-        <span class="size-1 rounded-full bg-blue-400/60"></span>
-        <span class="size-1 animate-pulse rounded-full bg-blue-500"></span>
-      </div>
-    </div>
-    
-    <div class="flex flex-wrap items-center gap-4">
-      <a href="https://www.travellings.cn/go.html" target="_blank" rel="nofollow noopener" title="开往-友链接力" class="transition-opacity hover:opacity-80">
-        <img src="https://www.travellings.cn/assets/logo.gif" alt="开往-友链接力" style="width:auto;height:20px;">
-      </a>
-      <a href="https://www.foreverblog.cn/go.html" target="_blank" rel="nofollow noopener" title="十年之约" class="transition-opacity hover:opacity-80">
-        <img src="https://blog.peiluming.com/wormhole_4.gif" alt="十年之约" style="width:auto;height:20px;">
-      </a>
-    </div>
+      <span>随机传送</span>
+    </h2>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4">
+    <a
+      href="https://www.travellings.cn/go.html"
+      target="_blank"
+      rel="nofollow noopener"
+      title="开往-友链接力"
+      class="group/link relative flex items-center justify-center overflow-hidden rounded-lg border border-gray-200/50 bg-gray-50/50 px-3 py-2 transition-all duration-300 hover:border-blue-500/30 hover:bg-white hover:shadow-md dark:border-slate-700/50 dark:bg-slate-800/50 dark:hover:bg-slate-800"
+    >
+      <img
+        src="https://www.travellings.cn/assets/logo.gif"
+        alt="开往-友链接力"
+        class="relative z-10 h-5 w-auto"
+      />
+      <!-- Hover decoration similar to tags -->
+      <div class="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-300 group-hover/link:w-full"></div>
+    </a>
+    <a
+      href="https://www.foreverblog.cn/go.html"
+      target="_blank"
+      rel="nofollow noopener"
+      title="十年之约"
+      class="group/link relative flex items-center justify-center overflow-hidden rounded-lg border border-gray-200/50 bg-gray-50/50 px-3 py-2 transition-all duration-300 hover:border-blue-500/30 hover:bg-white hover:shadow-md dark:border-slate-700/50 dark:bg-slate-800/50 dark:hover:bg-slate-800"
+    >
+      <img
+        src="https://blog.peiluming.com/wormhole_4.gif"
+        alt="十年之约"
+        class="relative z-10 h-5 w-auto"
+      />
+      <!-- Hover decoration similar to tags -->
+      <div class="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-300 group-hover/link:w-full"></div>
+    </a>
   </div>
 </div>

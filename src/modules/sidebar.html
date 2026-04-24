@@ -3,8 +3,13 @@
     <th:block th:replace="${prepend}" />
   </th:block>
 
-  <th:block th:replace="~{modules/widgets/daily-quote}" />
-  <th:block th:replace="~{modules/widgets/blog-links}" />
+  <div class="sidebar-widget-wrapper">
+    <th:block th:replace="~{modules/widgets/daily-quote}" />
+  </div>
+
+  <div class="sidebar-widget-wrapper">
+    <th:block th:replace="~{modules/widgets/blog-links}" />
+  </div>
 
   <th:block th:with="widgets = ${theme.config.sidebar.widgets} ">
     <th:block th:each="widget : ${widgets}">
