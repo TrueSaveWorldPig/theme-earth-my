@@ -4,6 +4,7 @@
   </th:block>
 
   <th:block th:replace="~{modules/widgets/daily-quote}" />
+  <th:block th:replace="~{modules/widgets/blog-links}" />
 
   <th:block th:with="widgets = ${theme.config.sidebar.widgets} ">
     <th:block th:each="widget : ${widgets}">
