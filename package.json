@@ -12,6 +12,7 @@
   "dependencies": {
     "@halo-dev/api-client": "^2.23.0",
     "alpinejs": "^3.15.9",
+    "crypto-js": "^4.2.0",
     "overlayscrollbars": "^2.14.0",
     "pupa": "^3.3.0",
     "tocbot": "^4.36.4"
@@ -26,6 +27,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.19",
     "@types/alpinejs": "^3.13.11",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "24.12.0",
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",

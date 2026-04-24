@@ -21,5 +21,11 @@
     </th:block>
   </th:block>
 
-  <!-- <th:block th:replace="~{modules/widgets/latest-comments}" /> -->
+  <!-- 最新评论组件 -->
+  <div id="comment-sidebar" th:if="${haloCommentEnabled}">  
+    <div class="sidebar-widget-wrapper">   
+      <th:block th:replace="~{modules/widgets/latest-comments}" />  
+    </div>
+  </div>
+
 </aside>

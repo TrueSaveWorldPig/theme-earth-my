@@ -8,13 +8,14 @@
     <h2 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400" th:text="#{widget.latestComments.title}">最新评论</h2>
   </div>
 
-  <div th:with="comments = ${commentFinder.list(null, 5)}">
+  <div th:with="comments = ${commentFinder.list(null, 1, 5)}">
     <ul th:if="${not #lists.isEmpty(comments)}" role="list" class="space-y-4">
       <li th:each="comment : ${comments}" class="group/item relative">
         <div class="flex items-start space-x-3">
           <div class="relative flex-shrink-0">
-            <img class="size-8 rounded-full border border-gray-100 dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover/item:scale-110" 
-                 th:src="${comment.spec.owner.avatar ?: #theme.assets('/images/default-avatar.svg')}" 
+            <img class="size-8 rounded-full border border-gray-100 dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover/item:scale-110"
+                 th:data-cravatar-email="${comment.spec.owner.name}"
+                 th:src="${#theme.assets('/images/default-avatar.svg')}"
                  th:alt="${comment.spec.owner.displayName}" />
             <div class="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-white bg-green-500 dark:border-slate-800"></div>
           </div>

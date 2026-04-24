@@ -2,6 +2,7 @@ import "./styles/tailwind.css";
 import "./styles/main.scss";
 // @ts-ignore
 import Alpine from "alpinejs";
+import CryptoJS from "crypto-js";
 
 import colorSchemeSwitcher from "./alpine-data/color-scheme-switcher";
 import dropdown from "./alpine-data/dropdown";
@@ -24,6 +25,24 @@ Alpine.magic("timeAgo", () => (date: any) => timeAgo(date));
 
 Alpine.start();
 
+function getCravatarUrl(email: string): string {
+  const normalizedEmail = email.trim().toLowerCase();
+  const emailMd5 = CryptoJS.MD5(normalizedEmail).toString();
+  return `https://cn.cravatar.com/avatar/${emailMd5}`;
+}
+
+function initCommentAvatars(): void {
+  const avatars = document.querySelectorAll<HTMLImageElement>(
+    "img[data-cravatar-email]"
+  );
+  avatars.forEach((img) => {
+    const email = img.getAttribute("data-cravatar-email");
+    if (email && email.includes("@")) {
+      img.src = getCravatarUrl(email);
+    }
+  });
+}
+
 const onScroll = () => {
   const headerMenu = document.getElementById("header-menu");
   if (window.scrollY > 0) {
@@ -36,6 +55,8 @@ const onScroll = () => {
 window.addEventListener("scroll", onScroll);
 
 document.addEventListener("DOMContentLoaded", () => {
+  initCommentAvatars();
+
   const scrollToTopButton = document.getElementById("btn-scroll-to-top");
 
   if (!scrollToTopButton) {
